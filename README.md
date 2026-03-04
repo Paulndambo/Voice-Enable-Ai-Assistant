@@ -158,4 +158,3 @@ Created with ❤️ using React and Vite
 ---
 
 **Note:** This application requires microphone access for voice features and an active internet connection for AI responses.
-# Voice-Enable-Ai-Assistant

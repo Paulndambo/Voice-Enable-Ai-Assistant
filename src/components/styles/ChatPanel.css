@@ -1,0 +1,55 @@
+.chat-panel {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 32px);
+  width: 100%;
+  background: var(--panel-bg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Subtle right-edge glow on the chat panel */
+.chat-panel::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  right: -1px;
+  width: 1px;
+  background: linear-gradient(to bottom,
+      transparent,
+      rgba(129, 140, 248, 0.1) 20%,
+      rgba(56, 189, 248, 0.3) 50%,
+      rgba(129, 140, 248, 0.1) 80%,
+      transparent);
+  pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+  .chat-panel {
+    height: calc(100vh - 24px);
+  }
+}
+
+@media (max-width: 860px) {
+  .chat-panel {
+    height: calc(100vh - 120px);
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .chat-panel {
+    height: calc(100vh - 100px);
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+}

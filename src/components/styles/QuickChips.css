@@ -1,0 +1,47 @@
+.chips-container {
+  margin-top: 26px;
+  width: min(320px, 75vw);
+}
+
+.chips-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: 9px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 6px 13px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  color: var(--cyan);
+  opacity: 0.72;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+@media (max-width: 860px) {
+  .chips-container,
+  .chips-label,
+  .chips {
+    display: none;
+  }
+}

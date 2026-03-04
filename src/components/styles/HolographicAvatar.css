@@ -1,0 +1,259 @@
+.avatar-frame {
+  position: relative;
+  width: min(320px, 75vw);
+  aspect-ratio: 6/7;
+  margin: 0 auto;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Premium smooth corner accents instead of sharp cyber borders */
+.avatar-frame::before,
+.avatar-frame::after,
+.corner-br,
+.corner-bl {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-color: rgba(255, 255, 255, 0.15);
+  border-style: solid;
+  border-radius: 12px;
+  opacity: 0.8;
+  transition: all 0.5s ease;
+  z-index: 3;
+}
+
+.avatar-frame::before {
+  top: -10px;
+  left: -10px;
+  border-width: 1px 0 0 1px;
+}
+
+.avatar-frame::after {
+  top: -10px;
+  right: -10px;
+  border-width: 1px 1px 0 0;
+}
+
+.corner-br {
+  bottom: -10px;
+  right: -10px;
+  border-width: 0 1px 1px 0;
+}
+
+.corner-bl {
+  bottom: -10px;
+  left: -10px;
+  border-width: 0 0 1px 1px;
+}
+
+/* Holographic depth layers behind canvas */
+.holo-depth-layer {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.holo-depth-back {
+  background: radial-gradient(circle at 50% 50%,
+      rgba(129, 140, 248, 0.15) 0%,
+      rgba(56, 189, 248, 0.08) 30%,
+      transparent 60%);
+  transform: translateZ(-60px) scale(1.2);
+  animation: depthPulseBack 7s alternate infinite ease-in-out;
+  z-index: 0;
+}
+
+.holo-depth-mid {
+  background: radial-gradient(circle at 50% 50%,
+      rgba(56, 189, 248, 0.12) 0%,
+      rgba(129, 140, 248, 0.06) 40%,
+      transparent 65%);
+  transform: translateZ(-30px) scale(1.1);
+  animation: depthPulseMid 5s alternate-reverse infinite ease-in-out;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+@keyframes depthPulseBack {
+  0% {
+    transform: translateZ(-60px) scale(1.2) rotate(0deg);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translateZ(-60px) scale(1.35) rotate(10deg);
+    opacity: 1;
+  }
+}
+
+@keyframes depthPulseMid {
+  0% {
+    transform: translateZ(-30px) scale(1.1) rotate(0deg);
+    opacity: 0.5;
+  }
+
+  100% {
+    transform: translateZ(-30px) scale(1.18) rotate(-15deg);
+    opacity: 0.9;
+  }
+}
+
+.glow-orb {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(56, 189, 248, 0.15) 20%,
+      transparent 70%);
+  box-shadow:
+    0 0 60px rgba(56, 189, 248, 0.2),
+    inset 0 0 40px rgba(129, 140, 248, 0.2);
+  animation: orbPulse 6s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(8px);
+}
+
+@keyframes orbPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.7;
+    filter: blur(8px);
+  }
+
+  100% {
+    transform: scale(1.05);
+    opacity: 1;
+    filter: blur(12px);
+  }
+}
+
+/* Organic pulsing rings instead of rigid lines */
+.ring {
+  position: absolute;
+  inset: -15%;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  background: radial-gradient(circle, transparent 60%, rgba(255, 255, 255, 0.03) 65%, transparent 70%);
+  animation: ringPulseOrganic 8s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: screen;
+}
+
+.ring:nth-child(6) {
+  animation-delay: -2s;
+  animation-duration: 9s;
+}
+
+.ring:nth-child(7) {
+  animation-delay: -4s;
+  animation-duration: 11s;
+}
+
+@keyframes ringPulseOrganic {
+  0% {
+    transform: scale(0.6) rotateX(20deg) rotateY(10deg);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.4) rotateX(30deg) rotateY(20deg);
+    opacity: 0;
+  }
+}
+
+.head-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: relative;
+  z-index: 1;
+  animation: subtleFloat 6s ease-in-out infinite;
+}
+
+@keyframes subtleFloat {
+
+  0%,
+  100% {
+    transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+  }
+
+  25% {
+    transform: translateY(-2px) rotateX(0.5deg) rotateY(-0.5deg);
+  }
+
+  50% {
+    transform: translateY(-3px) rotateX(0deg) rotateY(0.5deg);
+  }
+
+  75% {
+    transform: translateY(-1px) rotateX(-0.5deg) rotateY(0deg);
+  }
+}
+
+/* Holographic flicker overlay */
+.holo-flicker {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 240, 255, 0.008) 2px,
+      rgba(0, 240, 255, 0.008) 4px);
+  animation: holoFlicker 0.15s steps(2) infinite;
+  mix-blend-mode: screen;
+  border-radius: 4px;
+}
+
+@keyframes holoFlicker {
+  0% {
+    opacity: 0.6;
+    transform: translateY(0px);
+  }
+
+  50% {
+    opacity: 0.8;
+    transform: translateY(1px);
+  }
+
+  100% {
+    opacity: 0.6;
+    transform: translateY(0px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .avatar-frame {
+    width: 64px;
+    flex-shrink: 0;
+  }
+
+  .avatar-frame::before,
+  .avatar-frame::after,
+  .corner-br,
+  .corner-bl {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .avatar-frame {
+    width: 48px;
+  }
+}

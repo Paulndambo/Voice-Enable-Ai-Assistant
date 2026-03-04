@@ -1,0 +1,111 @@
+.avatar-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 40px;
+  border-right: 1px solid var(--border);
+  gap: 0;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Ambient background glow inside avatar panel */
+.avatar-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 42%, rgba(0, 100, 200, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 50% 85%, rgba(0, 60, 140, 0.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Vertical decorative lines on left/right edges */
+.avatar-panel::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 240, 255, 0.15) 20%,
+    rgba(0, 240, 255, 0.25) 50%,
+    rgba(0, 240, 255, 0.15) 80%,
+    transparent
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.avatar-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sys-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  letter-spacing: 5px;
+  color: var(--cyan);
+  opacity: 0.58;
+  text-transform: uppercase;
+  margin-bottom: 28px;
+  text-align: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* Decorative top rule above sys-label */
+.sys-label::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--cyan), transparent);
+  margin: 0 auto 12px;
+  opacity: 0.4;
+}
+
+/* Bottom decorative section divider */
+.avatar-panel-divider {
+  width: 100%;
+  max-width: 280px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(0,240,255,0.2), transparent);
+  margin: 20px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 860px) {
+  .avatar-panel {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    gap: 14px;
+    min-height: auto;
+  }
+
+  .avatar-panel::before,
+  .avatar-panel::after {
+    display: none;
+  }
+
+  .sys-label {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .avatar-panel {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+}
