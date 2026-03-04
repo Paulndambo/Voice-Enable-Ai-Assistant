@@ -236,20 +236,20 @@ const HolographicAvatar = () => {
       ctx.fillStyle = foreheadG
       ctx.fill()
 
-      // Cheekbone highlights (left and right)
-      ;[-1, 1].forEach(side => {
-        const cheekX = side * fW * 0.5 + rotShiftX * 0.15
-        const cheekY = -fH * 0.05 + rotShiftY * 0.1
-        const cheekBright = side === -1 ? 0.16 : 0.08  // left cheek brighter (light from left)
-        const cheekG = ctx.createRadialGradient(cheekX, cheekY, 1, cheekX, cheekY, fW * 0.35)
-        cheekG.addColorStop(0, `rgba(150,230,255,${cheekBright})`)
-        cheekG.addColorStop(0.5, `rgba(80,180,230,${cheekBright * 0.4})`)
-        cheekG.addColorStop(1, 'transparent')
-        ctx.beginPath()
-        ctx.ellipse(cheekX, cheekY, fW * 0.35, fH * 0.2, 0, 0, Math.PI * 2)
-        ctx.fillStyle = cheekG
-        ctx.fill()
-      })
+        // Cheekbone highlights (left and right)
+        ;[-1, 1].forEach(side => {
+          const cheekX = side * fW * 0.5 + rotShiftX * 0.15
+          const cheekY = -fH * 0.05 + rotShiftY * 0.1
+          const cheekBright = side === -1 ? 0.16 : 0.08  // left cheek brighter (light from left)
+          const cheekG = ctx.createRadialGradient(cheekX, cheekY, 1, cheekX, cheekY, fW * 0.35)
+          cheekG.addColorStop(0, `rgba(150,230,255,${cheekBright})`)
+          cheekG.addColorStop(0.5, `rgba(80,180,230,${cheekBright * 0.4})`)
+          cheekG.addColorStop(1, 'transparent')
+          ctx.beginPath()
+          ctx.ellipse(cheekX, cheekY, fW * 0.35, fH * 0.2, 0, 0, Math.PI * 2)
+          ctx.fillStyle = cheekG
+          ctx.fill()
+        })
 
       // Chin shadow for depth
       const chinG = ctx.createRadialGradient(0, fH * 0.7, 5, 0, fH * 0.8, fW * 0.7)
@@ -348,15 +348,15 @@ const HolographicAvatar = () => {
       ctx.fillStyle = tipG
       ctx.fill()
 
-      // Nostril shadows
-      ;[-1, 1].forEach(side => {
-        const nx = noseX + side * 6
-        const ny = 20
-        ctx.beginPath()
-        ctx.ellipse(nx, ny, 2.5, 1.5, side * 0.3, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(0,30,60,.15)'
-        ctx.fill()
-      })
+        // Nostril shadows
+        ;[-1, 1].forEach(side => {
+          const nx = noseX + side * 6
+          const ny = 20
+          ctx.beginPath()
+          ctx.ellipse(nx, ny, 2.5, 1.5, side * 0.3, 0, Math.PI * 2)
+          ctx.fillStyle = 'rgba(0,30,60,.15)'
+          ctx.fill()
+        })
 
       ctx.restore()
     }
@@ -365,34 +365,34 @@ const HolographicAvatar = () => {
       const eY = -48
       const eX = 40
 
-      ;[-1, 1].forEach(side => {
-        const bx = cx + ox + side * eX
-        const by = cy + oy + breath + eY
+        ;[-1, 1].forEach(side => {
+          const bx = cx + ox + side * eX
+          const by = cy + oy + breath + eY
 
-        ctx.save()
-        ctx.translate(bx, by)
-        ctx.rotate(state.headTilt)
+          ctx.save()
+          ctx.translate(bx, by)
+          ctx.rotate(state.headTilt)
 
-        // Brow ridge shadow
-        const browG = ctx.createLinearGradient(0, -4, 0, 6)
-        browG.addColorStop(0, 'rgba(0,40,80,.08)')
-        browG.addColorStop(0.5, 'rgba(0,60,100,.12)')
-        browG.addColorStop(1, 'transparent')
-        ctx.beginPath()
-        ctx.ellipse(0, 2, 28, 8, side * -0.1, 0, Math.PI * 2)
-        ctx.fillStyle = browG
-        ctx.fill()
+          // Brow ridge shadow
+          const browG = ctx.createLinearGradient(0, -4, 0, 6)
+          browG.addColorStop(0, 'rgba(0,40,80,.08)')
+          browG.addColorStop(0.5, 'rgba(0,60,100,.12)')
+          browG.addColorStop(1, 'transparent')
+          ctx.beginPath()
+          ctx.ellipse(0, 2, 28, 8, side * -0.1, 0, Math.PI * 2)
+          ctx.fillStyle = browG
+          ctx.fill()
 
-        // Eyebrow line
-        ctx.beginPath()
-        ctx.moveTo(-22, 0)
-        ctx.bezierCurveTo(-15, -5 - side * 1, 10, -6 + side * 0.5, 22, -2)
-        ctx.strokeStyle = 'rgba(0,200,240,.3)'
-        ctx.lineWidth = 1.5
-        ctx.stroke()
+          // Eyebrow line
+          ctx.beginPath()
+          ctx.moveTo(-22, 0)
+          ctx.bezierCurveTo(-15, -5 - side * 1, 10, -6 + side * 0.5, 22, -2)
+          ctx.strokeStyle = 'rgba(0,200,240,.3)'
+          ctx.lineWidth = 1.5
+          ctx.stroke()
 
-        ctx.restore()
-      })
+          ctx.restore()
+        })
     }
 
     const drawEyes = (ox, oy, breath) => {
@@ -406,125 +406,125 @@ const HolographicAvatar = () => {
       const pOx = ox * 1.12
       const pOy = oy * 1.08
 
-      ;[-1, 1].forEach(side => {
-        const ex = cx + pOx + side * eX
-        const ey = cy + pOy + breath + eY
+        ;[-1, 1].forEach(side => {
+          const ex = cx + pOx + side * eX
+          const ey = cy + pOy + breath + eY
 
-        ctx.save()
+          ctx.save()
 
-        // Eye socket shadow for depth
-        const socketG = ctx.createRadialGradient(ex, ey, EW * 0.3, ex, ey, EW * 1.5)
-        socketG.addColorStop(0, 'rgba(0,30,60,.12)')
-        socketG.addColorStop(0.5, 'rgba(0,20,40,.06)')
-        socketG.addColorStop(1, 'transparent')
-        ctx.fillStyle = socketG
-        ctx.beginPath()
-        ctx.ellipse(ex, ey, EW * 1.3, EH * 1.8, 0, 0, Math.PI * 2)
-        ctx.fill()
-
-        // Eye clipping
-        ctx.beginPath()
-        ctx.moveTo(ex - EW, ey)
-        ctx.bezierCurveTo(ex - EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW, ey)
-        ctx.bezierCurveTo(ex + EW * 0.5, ey + EH * state.blinkState * 0.6, ex - EW * 0.5, ey + EH * state.blinkState * 0.6, ex - EW, ey)
-        ctx.closePath()
-        ctx.clip()
-
-        // Sclera with depth gradient
-        const scl = ctx.createRadialGradient(ex + state.lookX * 3, ey + state.lookY * 2, 1, ex, ey, EW)
-        scl.addColorStop(0, 'rgba(230,252,255,.94)')
-        scl.addColorStop(0.4, 'rgba(200,242,250,.85)')
-        scl.addColorStop(0.7, 'rgba(150,215,235,.7)')
-        scl.addColorStop(1, 'rgba(80,170,200,.4)')
-        ctx.beginPath()
-        ctx.ellipse(ex, ey, EW, EH, 0, 0, Math.PI * 2)
-        ctx.fillStyle = scl
-        ctx.fill()
-
-        // Iris with more 3D depth rings
-        const ix = ex + state.lookX * 4
-        const iy = ey + state.lookY * 2.5
-        const irisR = 8.5
-
-        // Iris outer glow
-        const irisOuter = ctx.createRadialGradient(ix, iy, irisR * 0.8, ix, iy, irisR * 1.3)
-        irisOuter.addColorStop(0, 'rgba(0,100,180,.15)')
-        irisOuter.addColorStop(1, 'transparent')
-        ctx.beginPath()
-        ctx.arc(ix, iy, irisR * 1.3, 0, Math.PI * 2)
-        ctx.fillStyle = irisOuter
-        ctx.fill()
-
-        const irisg = ctx.createRadialGradient(ix - 1.5, iy - 1.5, 0.5, ix, iy, irisR)
-        irisg.addColorStop(0, 'rgba(200,250,255,.97)')
-        irisg.addColorStop(0.1, 'rgba(80,230,255,.95)')
-        irisg.addColorStop(0.3, 'rgba(0,180,240,.9)')
-        irisg.addColorStop(0.55, 'rgba(0,120,200,.85)')
-        irisg.addColorStop(0.75, 'rgba(0,60,160,.75)')
-        irisg.addColorStop(1, 'rgba(0,20,80,.6)')
-        ctx.beginPath()
-        ctx.arc(ix, iy, irisR, 0, Math.PI * 2)
-        ctx.fillStyle = irisg
-        ctx.fill()
-
-        // Iris detail lines for 3D texture
-        ctx.globalAlpha = 0.12
-        for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+          // Eye socket shadow for depth
+          const socketG = ctx.createRadialGradient(ex, ey, EW * 0.3, ex, ey, EW * 1.5)
+          socketG.addColorStop(0, 'rgba(0,30,60,.12)')
+          socketG.addColorStop(0.5, 'rgba(0,20,40,.06)')
+          socketG.addColorStop(1, 'transparent')
+          ctx.fillStyle = socketG
           ctx.beginPath()
-          ctx.moveTo(ix + Math.cos(a) * 3, iy + Math.sin(a) * 3)
-          ctx.lineTo(ix + Math.cos(a) * irisR * 0.9, iy + Math.sin(a) * irisR * 0.9)
-          ctx.strokeStyle = '#00d0ff'
-          ctx.lineWidth = 0.4
+          ctx.ellipse(ex, ey, EW * 1.3, EH * 1.8, 0, 0, Math.PI * 2)
+          ctx.fill()
+
+          // Eye clipping
+          ctx.beginPath()
+          ctx.moveTo(ex - EW, ey)
+          ctx.bezierCurveTo(ex - EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW, ey)
+          ctx.bezierCurveTo(ex + EW * 0.5, ey + EH * state.blinkState * 0.6, ex - EW * 0.5, ey + EH * state.blinkState * 0.6, ex - EW, ey)
+          ctx.closePath()
+          ctx.clip()
+
+          // Sclera with depth gradient
+          const scl = ctx.createRadialGradient(ex + state.lookX * 3, ey + state.lookY * 2, 1, ex, ey, EW)
+          scl.addColorStop(0, 'rgba(230,252,255,.94)')
+          scl.addColorStop(0.4, 'rgba(200,242,250,.85)')
+          scl.addColorStop(0.7, 'rgba(150,215,235,.7)')
+          scl.addColorStop(1, 'rgba(80,170,200,.4)')
+          ctx.beginPath()
+          ctx.ellipse(ex, ey, EW, EH, 0, 0, Math.PI * 2)
+          ctx.fillStyle = scl
+          ctx.fill()
+
+          // Iris with more 3D depth rings
+          const ix = ex + state.lookX * 4
+          const iy = ey + state.lookY * 2.5
+          const irisR = 8.5
+
+          // Iris outer glow
+          const irisOuter = ctx.createRadialGradient(ix, iy, irisR * 0.8, ix, iy, irisR * 1.3)
+          irisOuter.addColorStop(0, 'rgba(0,100,180,.15)')
+          irisOuter.addColorStop(1, 'transparent')
+          ctx.beginPath()
+          ctx.arc(ix, iy, irisR * 1.3, 0, Math.PI * 2)
+          ctx.fillStyle = irisOuter
+          ctx.fill()
+
+          const irisg = ctx.createRadialGradient(ix - 1.5, iy - 1.5, 0.5, ix, iy, irisR)
+          irisg.addColorStop(0, 'rgba(200,250,255,.97)')
+          irisg.addColorStop(0.1, 'rgba(80,230,255,.95)')
+          irisg.addColorStop(0.3, 'rgba(0,180,240,.9)')
+          irisg.addColorStop(0.55, 'rgba(0,120,200,.85)')
+          irisg.addColorStop(0.75, 'rgba(0,60,160,.75)')
+          irisg.addColorStop(1, 'rgba(0,20,80,.6)')
+          ctx.beginPath()
+          ctx.arc(ix, iy, irisR, 0, Math.PI * 2)
+          ctx.fillStyle = irisg
+          ctx.fill()
+
+          // Iris detail lines for 3D texture
+          ctx.globalAlpha = 0.12
+          for (let a = 0; a < Math.PI * 2; a += Math.PI / 8) {
+            ctx.beginPath()
+            ctx.moveTo(ix + Math.cos(a) * 3, iy + Math.sin(a) * 3)
+            ctx.lineTo(ix + Math.cos(a) * irisR * 0.9, iy + Math.sin(a) * irisR * 0.9)
+            ctx.strokeStyle = '#00d0ff'
+            ctx.lineWidth = 0.4
+            ctx.stroke()
+          }
+          ctx.globalAlpha = 1
+
+          // Pupil with depth
+          const pupilR = 3.8 + state.mouthOpen * 0.4
+          const pupilG = ctx.createRadialGradient(ix, iy, 0, ix, iy, pupilR)
+          pupilG.addColorStop(0, 'rgba(0,0,5,1)')
+          pupilG.addColorStop(0.7, 'rgba(0,0,10,1)')
+          pupilG.addColorStop(1, 'rgba(0,20,40,.85)')
+          ctx.beginPath()
+          ctx.arc(ix, iy, pupilR, 0, Math.PI * 2)
+          ctx.fillStyle = pupilG
+          ctx.fill()
+
+          // Specular highlights (multiple for 3D)
+          ctx.beginPath()
+          ctx.ellipse(ix - 2.5, iy - 2.8, 2.2, 1.6, -0.6, 0, Math.PI * 2)
+          ctx.fillStyle = 'rgba(255,255,255,.95)'
+          ctx.fill()
+
+          // Secondary smaller specular
+          ctx.beginPath()
+          ctx.ellipse(ix + 2, iy + 1.5, 1, 0.7, 0.3, 0, Math.PI * 2)
+          ctx.fillStyle = 'rgba(200,240,255,.4)'
+          ctx.fill()
+
+          ctx.restore()
+
+          // Eyelid outline with glow
+          ctx.save()
+          ctx.shadowColor = '#00e0ff'
+          ctx.shadowBlur = 4
+          ctx.beginPath()
+          ctx.moveTo(ex - EW, ey)
+          ctx.bezierCurveTo(ex - EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW, ey)
+          ctx.strokeStyle = 'rgba(0,230,255,.85)'
+          ctx.lineWidth = 1.3
           ctx.stroke()
-        }
-        ctx.globalAlpha = 1
+          ctx.shadowBlur = 0
 
-        // Pupil with depth
-        const pupilR = 3.8 + state.mouthOpen * 0.4
-        const pupilG = ctx.createRadialGradient(ix, iy, 0, ix, iy, pupilR)
-        pupilG.addColorStop(0, 'rgba(0,0,5,1)')
-        pupilG.addColorStop(0.7, 'rgba(0,0,10,1)')
-        pupilG.addColorStop(1, 'rgba(0,20,40,.85)')
-        ctx.beginPath()
-        ctx.arc(ix, iy, pupilR, 0, Math.PI * 2)
-        ctx.fillStyle = pupilG
-        ctx.fill()
-
-        // Specular highlights (multiple for 3D)
-        ctx.beginPath()
-        ctx.ellipse(ix - 2.5, iy - 2.8, 2.2, 1.6, -0.6, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(255,255,255,.95)'
-        ctx.fill()
-
-        // Secondary smaller specular
-        ctx.beginPath()
-        ctx.ellipse(ix + 2, iy + 1.5, 1, 0.7, 0.3, 0, Math.PI * 2)
-        ctx.fillStyle = 'rgba(200,240,255,.4)'
-        ctx.fill()
-
-        ctx.restore()
-
-        // Eyelid outline with glow
-        ctx.save()
-        ctx.shadowColor = '#00e0ff'
-        ctx.shadowBlur = 4
-        ctx.beginPath()
-        ctx.moveTo(ex - EW, ey)
-        ctx.bezierCurveTo(ex - EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW * 0.6, ey - EH * state.blinkState * 1.1, ex + EW, ey)
-        ctx.strokeStyle = 'rgba(0,230,255,.85)'
-        ctx.lineWidth = 1.3
-        ctx.stroke()
-        ctx.shadowBlur = 0
-
-        // Lower eyelid (subtle)
-        ctx.beginPath()
-        ctx.moveTo(ex - EW * 0.8, ey + 1)
-        ctx.bezierCurveTo(ex - EW * 0.3, ey + EH * state.blinkState * 0.5, ex + EW * 0.3, ey + EH * state.blinkState * 0.5, ex + EW * 0.8, ey + 1)
-        ctx.strokeStyle = 'rgba(0,200,240,.25)'
-        ctx.lineWidth = 0.7
-        ctx.stroke()
-        ctx.restore()
-      })
+          // Lower eyelid (subtle)
+          ctx.beginPath()
+          ctx.moveTo(ex - EW * 0.8, ey + 1)
+          ctx.bezierCurveTo(ex - EW * 0.3, ey + EH * state.blinkState * 0.5, ex + EW * 0.3, ey + EH * state.blinkState * 0.5, ex + EW * 0.8, ey + 1)
+          ctx.strokeStyle = 'rgba(0,200,240,.25)'
+          ctx.lineWidth = 0.7
+          ctx.stroke()
+          ctx.restore()
+        })
     }
 
     const drawMouth = (ox, oy, breath) => {

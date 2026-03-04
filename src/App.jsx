@@ -16,8 +16,8 @@ function App() {
   return (
     <div className="app">
       <PermissionBanner />
-      
-      <motion.div 
+
+      <motion.div
         className="app-container"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
