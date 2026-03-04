@@ -94,7 +94,19 @@ const ChatPanel = () => {
       ];
 
       const randomFact = facts[Math.floor(Math.random() * facts.length)];
-      const welcomeMsg = `Hey Paul. Gideon here, what are you up to today?\n\nHere is a random fact for you: ${randomFact}`
+      const greetings = [
+        (fact) => `Paul! There you are. Was wondering when you'd show up 😄\n\nOh, and before I forget — ${fact}`,
+        (fact) => `Hey hey, Paul's in the building! Ready when you are.\n\nAlso, completely unrelated but my brain won't let it go — ${fact}`,
+        (fact) => `Back again! Good to see you, Paul. What's on your mind today?\n\nWhile you think about it — ${fact}`,
+        (fact) => `Ah, Paul. Right on time — or fashionably late, I can't tell anymore 😂\n\nAnyway, here's something I stumbled on: ${fact}`,
+        (fact) => `Hey! Okay so I've just been sitting here waiting, no big deal 😄 What are we getting into today?\n\nAlso — ${fact}`,
+        (fact) => `Paul! Good timing. I was just about to start talking to myself.\n\nHere, take this fact as a peace offering: ${fact}`,
+        (fact) => `There's my guy! Alright, I'm all yours — what do you need?\n\nOh, and heads up — ${fact}`,
+        (fact) => `Hey Paul! Glad you're here. I've been low-key bored without you 😄\n\nSpeaking of random things — ${fact}`,
+      ]
+
+      const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
+      const welcomeMsg = randomGreeting(randomFact);
 
       addMessage('gideon', welcomeMsg)
 

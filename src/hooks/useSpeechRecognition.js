@@ -3,53 +3,51 @@ import { useAppStore } from '../store/appStore'
 
 export const useSpeechRecognition = (onCapture) => {
   const recognitionRef = useRef(null)
-
-  // 'passive' | 'active'
-  const modeRef = useRef('passive')
   const isListeningRef = useRef(false)
-  const silenceTimerRef = useRef(null)
+  const timeoutRef = useRef(null)      // 20s hard max
+  const silenceTimerRef = useRef(null) // 2s silence auto-submit
   const finalTranscriptRef = useRef('')
   const interimTranscriptRef = useRef('')
-  const hasSubmittedRef = useRef(false)
 
+  // Keep onCapture stable across renders
   const onCaptureRef = useRef(onCapture)
   useEffect(() => {
     onCaptureRef.current = onCapture
   }, [onCapture])
 
-  const {
-    setWakeState,
-    setStatus
-  } = useAppStore()
+  const { setWakeState, setStatus } = useAppStore()
 
   const isSupported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window
 
-  const clearSilenceTimer = useCallback(() => {
+  const stopListening = useCallback(({ submit = false } = {}) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
+    }
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current)
       silenceTimerRef.current = null
     }
-  }, [])
 
-  const submitTranscriptOnce = useCallback(() => {
-    if (modeRef.current === 'passive') return
-    if (hasSubmittedRef.current || !onCaptureRef.current) return
-
-    const transcript = `${finalTranscriptRef.current} ${interimTranscriptRef.current}`.trim()
-    if (!transcript) {
-      modeRef.current = 'passive'
-      setWakeState('idle')
-      setStatus('ONLINE', false)
-      return
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop()
+      } catch (e) { /* ignore */ }
     }
 
-    hasSubmittedRef.current = true
-    onCaptureRef.current(transcript)
-
-    // Switch back to passive mode
-    modeRef.current = 'passive'
+    isListeningRef.current = false
     setWakeState('idle')
     setStatus('ONLINE', false)
+
+    if (submit) {
+      const transcript = `${finalTranscriptRef.current} ${interimTranscriptRef.current}`.trim()
+      if (transcript && onCaptureRef.current) {
+        onCaptureRef.current(transcript)
+      }
+    }
+
+    finalTranscriptRef.current = ''
+    interimTranscriptRef.current = ''
   }, [setWakeState, setStatus])
 
   const playActivationTone = useCallback(() => {
@@ -61,7 +59,6 @@ export const useSpeechRecognition = (onCapture) => {
       gain.connect(actx.destination)
       osc.type = 'sine'
       osc.frequency.value = 880
-
       const start = actx.currentTime
       gain.gain.setValueAtTime(0, start)
       gain.gain.linearRampToValueAtTime(0.15, start + 0.05)
@@ -73,54 +70,39 @@ export const useSpeechRecognition = (onCapture) => {
     }
   }, [])
 
-  const switchToActive = useCallback(() => {
-    modeRef.current = 'active'
-    finalTranscriptRef.current = ''
-    interimTranscriptRef.current = ''
-    hasSubmittedRef.current = false
-    clearSilenceTimer()
-    setWakeState('capturing')
-    setStatus('LISTENING', false)
-    playActivationTone()
-  }, [clearSilenceTimer, setWakeState, setStatus, playActivationTone])
-
-  const stopActiveListening = useCallback(({ shouldSubmit = false } = {}) => {
-    if (shouldSubmit) {
-      submitTranscriptOnce()
-    } else {
-      modeRef.current = 'passive'
-      setWakeState('idle')
-      setStatus('ONLINE', false)
-    }
-    clearSilenceTimer()
-  }, [clearSilenceTimer, submitTranscriptOnce, setWakeState, setStatus])
-
-  const scheduleSilenceStop = useCallback(() => {
-    if (modeRef.current === 'passive') return
-    clearSilenceTimer()
-    silenceTimerRef.current = setTimeout(() => {
-      stopActiveListening({ shouldSubmit: true })
-    }, 1500)
-  }, [clearSilenceTimer, stopActiveListening])
-
-  const startPassiveListening = useCallback(() => {
+  const startListening = useCallback(() => {
     if (!isSupported) {
       console.error('Speech recognition not supported')
       return
     }
 
-    if (isListeningRef.current) return
+    // If already listening, stop it first
+    if (isListeningRef.current) {
+      stopListening({ submit: false })
+      return
+    }
+
+    finalTranscriptRef.current = ''
+    interimTranscriptRef.current = ''
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
     recognitionRef.current = new SpeechRecognition()
     recognitionRef.current.continuous = true
     recognitionRef.current.interimResults = true
     recognitionRef.current.lang = 'en-US'
-    recognitionRef.current.maxAlternatives = 5
+    recognitionRef.current.maxAlternatives = 1
 
-    isListeningRef.current = true
-    finalTranscriptRef.current = ''
-    interimTranscriptRef.current = ''
+    recognitionRef.current.onstart = () => {
+      isListeningRef.current = true
+      setWakeState('capturing')
+      setStatus('LISTENING', false)
+      playActivationTone()
+
+      // Auto-stop after 20 seconds
+      timeoutRef.current = setTimeout(() => {
+        stopListening({ submit: true })
+      }, 20000)
+    }
 
     recognitionRef.current.onresult = (e) => {
       let interimTranscript = ''
@@ -138,16 +120,13 @@ export const useSpeechRecognition = (onCapture) => {
       }
 
       interimTranscriptRef.current = interimTranscript
-      const combined = `${finalTranscriptRef.current} ${interimTranscriptRef.current}`
 
-      if (modeRef.current === 'passive') {
-        if (/\bgideon\b/i.test(combined)) {
-          switchToActive()
-        }
-      } else {
-        if (hasAnySpeech) {
-          scheduleSilenceStop()
-        }
+      // Reset silence timer every time we get speech
+      if (hasAnySpeech) {
+        if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current)
+        silenceTimerRef.current = setTimeout(() => {
+          stopListening({ submit: true })
+        }, 2000)
       }
     }
 
@@ -156,27 +135,16 @@ export const useSpeechRecognition = (onCapture) => {
       console.error('Recognition error:', e.error)
 
       if (e.error === 'not-allowed' || e.error === 'audio-capture') {
-        isListeningRef.current = false
+        stopListening({ submit: false })
         setStatus(`MIC: ${e.error === 'not-allowed' ? 'Permission denied' : 'No audio'}`, false)
       }
     }
 
     recognitionRef.current.onend = () => {
-      isListeningRef.current = false
-
-      if (modeRef.current === 'active') {
-        submitTranscriptOnce()
+      // If ended unexpectedly while we're still in a listening session, submit what we got
+      if (isListeningRef.current) {
+        stopListening({ submit: true })
       }
-
-      // Always try to restart for continuous passive listening
-      setTimeout(() => {
-        if (!isListeningRef.current && isSupported) {
-          try {
-            recognitionRef.current.start()
-            isListeningRef.current = true
-          } catch (e) { }
-        }
-      }, 100)
     }
 
     try {
@@ -185,36 +153,20 @@ export const useSpeechRecognition = (onCapture) => {
       console.error('Start error:', e)
       isListeningRef.current = false
     }
-  }, [isSupported, setStatus, switchToActive, scheduleSilenceStop, submitTranscriptOnce])
+  }, [isSupported, setWakeState, setStatus, playActivationTone, stopListening])
 
-  // Automatically start passive listening on mount
+  // Cleanup on unmount
   useEffect(() => {
-    if (isSupported) {
-      startPassiveListening()
-    }
     return () => {
-      clearSilenceTimer()
-      try {
-        recognitionRef.current?.abort()
-      } catch (e) { }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+      try { recognitionRef.current?.abort() } catch (e) { /* ignore */ }
     }
-  }, [startPassiveListening, isSupported, clearSilenceTimer])
-
-  // Manual trigger (e.g., clicking the microphone button)
-  const triggerActive = useCallback(() => {
-    if (!isListeningRef.current && isSupported) {
-      try {
-        recognitionRef.current?.start()
-        isListeningRef.current = true
-      } catch (e) { }
-    }
-    switchToActive()
-  }, [isSupported, switchToActive])
+  }, [])
 
   return {
     isSupported,
-    startListening: triggerActive,
-    stopListening: stopActiveListening,
+    startListening,
+    stopListening,
     isListening: isListeningRef.current
   }
 }
