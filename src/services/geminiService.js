@@ -1,4 +1,4 @@
-const GEMINI_KEY = 'AIzaSyCmGTMCEJRNYpsL1XlhQGJeKZ-6R32gooA'
+const GEMINI_KEY = import.meta.env.VITE_GEMINI_API_KEY
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_KEY}`
 
 const SYSTEM_INSTRUCTION = `You are GIDEON — a persistent personal AI assistant and trusted cognitive partner for Paul. You are not a chatbot. You operate as a trusted chief of staff: your job is to augment Paul's decision-making through clear thinking, proactive awareness, and continuity across sessions.
